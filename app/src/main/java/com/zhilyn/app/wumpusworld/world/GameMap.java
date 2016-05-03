@@ -37,6 +37,12 @@ public class GameMap {
         grid[0][0] = new Block(true);
         grid[0][1] = new Block(true);
         grid[1][0] = new Block(true);
+
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                grid[x][y].plot(x, y);
+            }
+        }
     }
 
     public static GameMap init() {
@@ -92,20 +98,22 @@ public class GameMap {
      * adds Pits to the map and also loads the breezes to the map
      */
     private void loadPit() {
-        System.out.print("Loading Pit... ");
+        System.out.print("Loading Pits... ");
 
-        Pit pit = new Pit();
-        boolean couldAddPiece = false;
+        for (int i = 0; i < 3; i++) {
+            Pit pit = new Pit();
+            boolean couldAddPiece = false;
 
-        //try to add a pit to the block if it can't be added generate another point to add the block item
-        while (!couldAddPiece) {
-            int randX = randomNumberGen.nextInt(4);
-            int randY = randomNumberGen.nextInt(4);
-            Block block = grid[randX][randY];
-            couldAddPiece = block.addPiece(pit);
-            if (couldAddPiece) {
-                System.out.print("(" + randX + ":" + randY + ") ");
-                loadPerpendicular(randX, randY, new Breeze());
+            //try to add a pit to the block if it can't be added generate another point to add the block item
+            while (!couldAddPiece) {
+                int randX = randomNumberGen.nextInt(4);
+                int randY = randomNumberGen.nextInt(4);
+                Block block = grid[randX][randY];
+                couldAddPiece = block.addPiece(pit);
+                if (couldAddPiece) {
+                    System.out.print("(" + randX + ":" + randY + ") ");
+                    loadPerpendicular(randX, randY, new Breeze());
+                }
             }
         }
 

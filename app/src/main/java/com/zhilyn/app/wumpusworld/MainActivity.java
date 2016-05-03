@@ -1,9 +1,9 @@
 package com.zhilyn.app.wumpusworld;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,46 +12,49 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-public class MainActivity extends AppCompatActivity {
-
-    @BindView(R.id.fab)
     FloatingActionButton fab;
-    @BindView(R.id.recycler_view)
     RecyclerView recyclerview;
-    @BindView(R.id.toolbar) @Nullable
     Toolbar toolbar;
 
     private ListAdapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         recyclerview = (RecyclerView) findViewById(R.id.recycler_view);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         adapter = new ListAdapter();
         final RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
-        RecyclerView.LayoutManager lm = new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager lm = new GridLayoutManager(MainActivity.this, 4, LinearLayoutManager.VERTICAL, false);
 
         recyclerview.setAdapter(adapter);
         recyclerview.setLayoutManager(lm);
         recyclerview.setItemAnimator(animator);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab_start);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                solveGame(v);
+            }
+        });
     }
 
-    @OnClick(R.id.fab)
-    void solveGame() {
-        //Snackbar.make(fab, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-
+    private void solveGame(View v) {
+        //adapter.solve();
+        Snackbar.make(fab, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @Override
@@ -74,5 +77,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRefresh() {
+        adapter = new ListAdapter();
+        recyclerview.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

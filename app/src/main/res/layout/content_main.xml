@@ -8,11 +8,23 @@
     tools:context="com.zhilyn.app.wumpusworld.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:padding="16dp"
-        tools:listitem="@layout/list_item"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:background="#bdbdbd"
+            android:padding="16dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            app:spanCount="4"
+            app:layoutManager="android.support.v7.widget.GridLayoutManager"
+            tools:listitem="@layout/list_item"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

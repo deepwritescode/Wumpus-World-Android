@@ -12,6 +12,7 @@ public class Block implements Player.PlayerAction {
     private final boolean IS_SAFE_BLOCK;
 
     List<GamePiece> content;
+    private Plot plot;
 
     public Block(boolean isSafeBlock){
         this.IS_SAFE_BLOCK = isSafeBlock;
@@ -23,25 +24,22 @@ public class Block implements Player.PlayerAction {
      * @return  true if successfully added false if the piece cant be added because there is already a pit, gold, or wumpus
      * */
     public boolean addPiece(GamePiece piece){
-        boolean status = true;
         if(isAdded(piece.getType())){
             return false;
         }
 
         GamePiece.Type type = piece.getType();
-        if ((piece.isWGP() && this.hasWGP()) || (IS_SAFE_BLOCK && piece.isWGP())) {
-            status = false;
+        boolean isWGP = piece.isWGP();
+        if ((isWGP && this.hasWGP()) || (IS_SAFE_BLOCK && piece.isWGP())) {
+            return false;
         }
 
-
-        if(status) {
-            this.content.add(piece);
-            if(piece.getType() == GamePiece.Type.PLAYER){
-                ((Player) piece).action = this;
-            }
+        this.content.add(piece);
+        if(piece.getType() == GamePiece.Type.PLAYER){
+            ((Player) piece).action = this;
         }
 
-        return status;
+        return true;
     }
 
     private boolean hasWGP() {
@@ -115,6 +113,29 @@ public class Block implements Player.PlayerAction {
     public void onGrab() {
         if(hasGold()){
             System.out.println("You win!");
+        }
+    }
+
+    public void plot(int x, int y) {
+        this.plot = new Plot(x, y);
+    }
+
+    public Plot getPlot() {
+        return this.plot;
+    }
+
+    public class Plot{
+        private final int x;
+        private final int y;
+
+        public Plot(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + x + "," + y + ")";
         }
     }
 }

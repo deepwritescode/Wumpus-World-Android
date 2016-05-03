@@ -2,13 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="center"
-    android:padding="3dp"
-    android:layout_width="80dp"
-    android:layout_height="80dp">
+    android:padding="2dp"
+    android:layout_width="82dp"
+    android:layout_height="82dp">
 
     <FrameLayout
         android:clickable="true"
-        android:padding="3dp"
+        android:padding="2dp"
         android:foreground="?attr/selectableItemBackground"
         android:background="@drawable/bg_card"
         android:layout_width="match_parent"
@@ -16,10 +16,67 @@
 
         <TextView
             android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             tools:text="item"
             />
+
+        <ImageView
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:id="@+id/stench"
+            android:src="@drawable/ic_stench"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:id="@+id/breeze"
+            android:src="@drawable/ic_breeze"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:id="@+id/wumpus"
+            android:src="@drawable/ic_wumpus"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:id="@+id/pit"
+            android:src="@drawable/ic_pit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:id="@+id/glitter"
+            android:src="@drawable/ic_glitter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:id="@+id/gold"
+            android:src="@drawable/ic_gold"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageView
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:id="@+id/player"
+            android:src="@drawable/ic_player"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
     </FrameLayout>
 
