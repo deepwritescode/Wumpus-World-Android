@@ -247,12 +247,11 @@ public class GameMap {
     }
 
     /**
-     * @param block the block that has the player
-     * @return the cost to get from the block to the goal
+     * gets the block that has the gold
+     * @return the block that is the destination
      * */
-    public int getCostToGoalFromBlock(Block block) {
-        Block.Point starting = block.getPoint();
-        Block.Point ending = new Block.Point(0, 0);
+    public Block getDestinationBlock(){
+        Block destination = null;
 
         boolean isGoal = false;
         for (int xI = 0; xI < 4; xI++) {
@@ -262,28 +261,44 @@ public class GameMap {
             for (int yI = 0; yI < 4; yI++) {
                 isGoal = grid[xI][yI].hasGlitter();
                 if(isGoal){
-                    ending = new Block.Point(xI, yI);
+                    destination = grid[xI][yI];
                     break;
                 }
             }
         }
 
-        return getDistance(starting, ending);
+        return destination;
     }
 
-    public int getDistance(Block.Point starting, Block.Point ending){
-        int x1 = starting.getX() + 1;
-        int y1 = starting.getY() + 1;
+    /**
+     * gets the cost from the block to the goal
+     * @param block the block to check
+     * @return the cost to get from the block to the goal
+     * */
+    public int getCostToGoalFromBlock(Block block) {
+        Block.Point start = block.getPoint();
+        Block.Point end = getDestinationBlock().getPoint();
+        return getDistance(start, end);
+    }
 
-        int x2 = ending.getX() + 1;
-        int y2 = ending.getY() + 1;
+    /**
+     * returns the distance from point a to point b
+     * @param pointA the starting point
+     * @param pointB the ending point
+     * */
+    public int getDistance(Block.Point pointA, Block.Point pointB){
+        int x1 = pointA.getX() + 1;
+        int y1 = pointA.getY() + 1;
+
+        int x2 = pointB.getX() + 1;
+        int y2 = pointB.getY() + 1;
         return ((x2 - x1) + (y2 - y1));
     }
 
     /**
      * @return true if the shooting the arrow with the position will kill wumpus
-     * @param pos the direction the player is facing
-     * @param block the block the arrow is being shot from
+     * @param pos the direction the player is facing and shooting the arrow
+     * @param block the block the arrow is being shot from that the the player is on
      * */
     public boolean willHitWumpus(Block block, Player.Position pos) {
         int x = block.getPoint().getX();

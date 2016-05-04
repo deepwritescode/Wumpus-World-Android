@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.zhilyn.app.wumpusworld.algorithm.AStar;
 import com.zhilyn.app.wumpusworld.world.GameMap;
 import com.zhilyn.app.wumpusworld.world.pieces.Block;
 import com.zhilyn.app.wumpusworld.world.pieces.GamePiece;
@@ -19,11 +20,13 @@ import java.util.List;
  */
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
 
+    private final GameMap map;
+
     private List<Block> mData;
 
     public ListAdapter(){
         mData = new ArrayList<>();
-        GameMap map = GameMap.init();
+        this.map = GameMap.init();
         mData = map.getListBlock();
     }
 
@@ -72,7 +75,9 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
     }
 
     public void solve() {
-
+        AStar aStar = new AStar(map);
+        mData = map.getListBlock();
+        notifyDataSetChanged();
     }
 
     public class ListItem extends RecyclerView.ViewHolder{
