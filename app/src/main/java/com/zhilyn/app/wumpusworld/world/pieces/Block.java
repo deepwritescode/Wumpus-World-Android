@@ -8,11 +8,12 @@ import java.util.List;
  * represents a block on the game map
  */
 public class Block implements Player.PlayerAction {
+
     //constant that states weather the block is a safe block or not
     private final boolean IS_SAFE_BLOCK;
 
     List<GamePiece> content;
-    private Plot plot;
+    private Point point;
 
     public Block(boolean isSafeBlock){
         this.IS_SAFE_BLOCK = isSafeBlock;
@@ -21,7 +22,8 @@ public class Block implements Player.PlayerAction {
 
     /**
      * adds an item to the block returns false if the block has a pit, gold, or wumpus
-     * @return  true if successfully added false if the piece cant be added because there is already a pit, gold, or wumpus
+     * @return  true if successfully added false if the piece cant be added because there is already
+     * a pit, gold, or wumpus
      * */
     public boolean addPiece(GamePiece piece){
         if(isAdded(piece.getType())){
@@ -117,20 +119,55 @@ public class Block implements Player.PlayerAction {
     }
 
     public void plot(int x, int y) {
-        this.plot = new Plot(x, y);
+        this.point = new Point(x, y);
     }
 
-    public Plot getPlot() {
-        return this.plot;
+    public Point getPoint() {
+        return this.point;
     }
 
-    public class Plot{
+    public void killWumpus() {
+        for (GamePiece gamePiece : content) {
+            if(gamePiece.getType() == GamePiece.Type.WUMPUS){
+                content.remove(gamePiece);
+            }
+        }
+    }
+
+    public Player getPlayer() {
+        for (GamePiece gamePiece : content) {
+            if(gamePiece.getType() == GamePiece.Type.PLAYER){
+                return (Player) gamePiece;
+            }
+        }
+        return null;
+    }
+
+    public Player removePlayer() {
+        for (int i = 0; i < content.size(); i++) {
+            GamePiece gamePiece = content.get(i);
+            if (gamePiece.getType() == GamePiece.Type.PLAYER) {
+                return (Player) content.remove(i);
+            }
+        }
+        return null;
+    }
+
+    public static class Point {
         private final int x;
         private final int y;
 
-        public Plot(int x, int y){
+        public Point(int x, int y){
             this.x = x;
             this.y = y;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
         }
 
         @Override

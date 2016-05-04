@@ -11,6 +11,8 @@ import com.zhilyn.app.wumpusworld.world.pieces.Player;
 import com.zhilyn.app.wumpusworld.world.pieces.Stench;
 import com.zhilyn.app.wumpusworld.world.pieces.Wumpus;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -59,6 +61,63 @@ public class GameMap {
 
     public Block[][] getGrid() {
         return grid;
+    }
+
+    /**
+     * @param point the point you want to get the block for
+     * @return the block at Point(x, y);
+     * */
+    public Block getBlock(Block.Point point){
+        int x = point.getX();
+        int y = point.getY();
+
+        if(inBounds(x) && inBounds(y)){
+            return grid[x][y];
+        }else{
+            return null;
+        }
+    }
+
+    /**
+     * @param x the x position of the point
+     * @param y the y position of the point
+     *
+     * @return  the block at (x, y)
+     * */
+    public Block getBlock(final int x, final int y){
+        if(inBounds(x) && inBounds(y)){
+            return grid[x][y];
+        }else{
+            return null;
+        }
+    }
+
+    public Block getBlockUp(Block block){
+        Block.Point p = block.getPoint();
+        int x = p.getX();
+        int y = p.getY();
+        return getBlock(x, y + 1);
+    }
+
+    public Block getBlockRight(Block block){
+        Block.Point p = block.getPoint();
+        int x = p.getX();
+        int y = p.getY();
+        return getBlock(x + 1, y);
+    }
+
+    public Block getBlockLeft(Block block){
+        Block.Point p = block.getPoint();
+        int x = p.getX();
+        int y = p.getY();
+        return getBlock(x - 1, y);
+    }
+
+    public Block getBlockDown(Block block){
+        Block.Point p = block.getPoint();
+        int x = p.getX();
+        int y = p.getY();
+        return getBlock(x, y - 1);
     }
 
     /**
@@ -187,4 +246,93 @@ public class GameMap {
         return (0 <= value) && (value < 4);
     }
 
+    /**
+     * @param block the block that has the player
+     * @return the cost to get from the block to the goal
+     * */
+    public int getCostToGoalFromBlock(Block block) {
+        Block.Point starting = block.getPoint();
+        Block.Point ending = new Block.Point(0, 0);
+
+        boolean isGoal = false;
+        for (int xI = 0; xI < 4; xI++) {
+            if(isGoal){
+                break;
+            }
+            for (int yI = 0; yI < 4; yI++) {
+                isGoal = grid[xI][yI].hasGlitter();
+                if(isGoal){
+                    ending = new Block.Point(xI, yI);
+                    break;
+                }
+            }
+        }
+
+        return getDistance(starting, ending);
+    }
+
+    public int getDistance(Block.Point starting, Block.Point ending){
+        int x1 = starting.getX() + 1;
+        int y1 = starting.getY() + 1;
+
+        int x2 = ending.getX() + 1;
+        int y2 = ending.getY() + 1;
+        return ((x2 - x1) + (y2 - y1));
+    }
+
+    /**
+     * @return true if the shooting the arrow with the position will kill wumpus
+     * @param pos the direction the player is facing
+     * @param block the block the arrow is being shot from
+     * */
+    public boolean willHitWumpus(Block block, Player.Position pos) {
+        int x = block.getPoint().getX();
+        int y = block.getPoint().getY();
+
+        boolean isHit = false;
+
+        switch (pos){
+            case UP:
+                for (int y1 = y; y1 < 4; y1++) {
+                    isHit = grid[x][y1].hasWumpus();
+                }
+                break;
+            case DOWN:
+                for (int y1 = y; y1 >= 0; y1--) {
+                    isHit = grid[x][y1].hasWumpus();
+                }
+                break;
+            case LEFT:
+                for (int x1 = x; x1 >= 0; x1--) {
+                    isHit = grid[x1][y].hasWumpus();
+                }
+                break;
+            case RIGHT:
+                for (int x1 = x; x1 < 4; x1++) {
+                    isHit = grid[x1][y].hasWumpus();
+                }
+                break;
+        }
+
+
+        return isHit;
+    }
+
+    /**
+     * @return the list of blocks to put into the ListAdapter in the order needed
+     * */
+    public List<Block> getListBlock(){
+        List<Block> data = new ArrayList<>();
+        GameMap map = GameMap.init();
+        Block[][] grid = map.getGrid();
+
+        for (int y = 3; y >= 0; y--) {
+            for (int x = 0; x < 4; x++) {
+                Block b = grid[x][y];
+                data.add(b);
+            }
+        }
+
+        return data;
+    }
 }

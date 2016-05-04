@@ -37,6 +37,10 @@ public class Player extends GamePiece{
         return position;
     }
 
+    public void setPosition(Position position){
+        this.position = position;
+    }
+
     public void grab(){
         if(action != null) {
             action.onGrab();

@@ -24,14 +24,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
     public ListAdapter(){
         mData = new ArrayList<>();
         GameMap map = GameMap.init();
-        Block[][] grid = map.getGrid();
-
-        for (int y = 3; y >= 0; y--) {
-            for (int x = 0; x < 4; x++) {
-                Block b = grid[x][y];
-                mData.add(b);
-            }
-        }
+        mData = map.getListBlock();
     }
 
     @Override
@@ -45,7 +38,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
     public void onBindViewHolder(ListItem holder, int position) {
         Block b = mData.get(position);
         List<GamePiece> pieces = b.getPieces();
-        holder.mText.append(b.getPlot().toString());
+        holder.mText.append(b.getPoint().toString());
         for (GamePiece piece : pieces) {
             switch (piece.getType()){
                 case PLAYER:
