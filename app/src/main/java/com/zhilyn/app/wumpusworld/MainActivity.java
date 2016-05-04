@@ -16,12 +16,14 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    FloatingActionButton fab;
+    FloatingActionButton fabStart;
     RecyclerView recyclerview;
     Toolbar toolbar;
 
     private ListAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private FloatingActionButton fabClear;
+    private TextView solutionText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        solutionText = (TextView) findViewById(R.id.solution);
 
         recyclerview = (RecyclerView) findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
@@ -43,18 +47,30 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         recyclerview.setLayoutManager(lm);
         recyclerview.setItemAnimator(animator);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab_start);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fabStart = (FloatingActionButton) findViewById(R.id.fab_start);
+        fabStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 solveGame(v);
             }
         });
+
+        fabClear = (FloatingActionButton) findViewById(R.id.fab_stop);
+        fabClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clear();
+            }
+        });
+    }
+
+    private void clear() {
+        solutionText.setText(null);
     }
 
     private void solveGame(View v) {
-        adapter.solve((TextView) findViewById(R.id.solution));
-        //Snackbar.make(fab, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        adapter.solve(solutionText);
+        //Snackbar.make(fabStart, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
 
     @Override

@@ -65,7 +65,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
                     holder.stench.setVisibility(View.VISIBLE);
                     break;
                 case GLITTER:
-                    holder.glitter.setVisibility(View.VISIBLE);
+                    //holder.glitter.setVisibility(View.VISIBLE);
                     break;
                 case GOLD:
                     holder.player.setVisibility(View.VISIBLE);
