@@ -49,32 +49,16 @@ public class AStar {
     }
 
     private List<DecisionNode.Move> getSolution(GameMap map, Block start, Block end) {
-        List<DecisionNode> tree = makePathTree(map);
         List<DecisionNode.Move> moves = new ArrayList<>();
 
-        for (int i = 0; i < tree.size(); i++) {
-            DecisionNode current = tree.get(i);
-
-            while (true) {
-                if (current.parent == null) {
-                    break;
-                }
-                DecisionNode.Move move = current.getBestMove();
-                Log.e("Move Tree", move.toString());
-                moves.add(move);
-
-                current = current.parent;
-            }
-        }
-
         //gets the last node
-        DecisionNode current = tree.get(tree.size() - 1);
+        DecisionNode current = makePath(map);
         while (true){
             if(current.parent == null){
                 break;
             }
             DecisionNode.Move move = current.getBestMove();
-            Log.e("Move Tree", move.toString());
+            Log.e("Solution Move Tree", move.toString());
             moves.add(move);
 
             current = current.parent;
@@ -86,11 +70,11 @@ public class AStar {
     /**
      * core of the implementation of A*
      * */
-    private List<DecisionNode> makePathTree(GameMap map) {
+    private DecisionNode makePath(GameMap map) {
         Block start = map.getPlayerBlock();
         Block end = map.getDestinationBlock();
         if(start == null || end == null){
-            Log.e("makePathTree(map)", "start or end is null");
+            Log.e("makePath(map)", "start or end is null");
         }
 
         //nodes that are opened but need to be solved
@@ -98,14 +82,18 @@ public class AStar {
         //nodes that are already solved and have their valued calculated
         List<DecisionNode> closed = new ArrayList<>();
 
+        DecisionNode solution = null;
 
         //add starting node to list of opened nodes
         DecisionNode startNode = new DecisionNode(start);
         opened.add(startNode);
 
         int loopCount = 0;
-        while (!opened.isEmpty() || !shouldStop(loopCount)) {
+        while (!opened.isEmpty()) {
             loopCount += 1;
+            if(shouldStop(loopCount)){
+                break;
+            }
             DecisionNode current = nodeWithLowestF(opened);
             if(current == null){
                 break;
@@ -121,7 +109,7 @@ public class AStar {
 
             //the path is already found
             if(currentNodeBlock.hasGold() || currentNodeBlock.hasGlitter() || (currentNodeBlock == end)){
-                break;
+                return current;
             }
 
             //for each neighboring node try to calculate the path and costs
@@ -158,7 +146,7 @@ public class AStar {
         Log.e("closed", ""+closed.size());
         Log.e("loopCount", ""+loopCount);
 
-        return closed;
+        return solution;
 
     }
 

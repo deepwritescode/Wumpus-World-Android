@@ -26,7 +26,7 @@ public class DecisionNode {
     public DecisionNode parent = null;
 
     //the block to make the move on
-    private Block block;
+    private final Block block;
     //the neighbors of the current node block
     private List<DecisionNode> neighbors = null;
 
@@ -163,88 +163,75 @@ public class DecisionNode {
      * the block the node is making decisions on/for
      * */
     public Block getBlock() {
-        return block;
+        return this.block;
     }
 
     /**
      * @return the best move suggested to be made
      * */
     public Move getBestMove(){
-        Move m = Move.GRAB;
-        //decision node for the best decision that can be made
-        DecisionNode leastCost = null;
+        if(this.block.hasGold()){
+            return Move.GRAB;
+        }
 
+        //decision node for the best movement that can be made
+        DecisionNode leastCost = this;
         //loop through the neighboring nodes to find the decision node with least F cost
-        for (DecisionNode neighbor : neighbors) {
-            if(leastCost == null){
-                leastCost = neighbor;
-            }
-            if(!neighbor.isTraversable()){
+        for (int i = 0; i < neighbors.size(); i++) {
+            DecisionNode neighbor = neighbors.get(i);
+
+            //if the neighboring node can't be traversed
+            if (!neighbor.isTraversable()) {
                 continue;
             }
-            if(neighbor.fCost() > leastCost.fCost()){
-                continue;
-            }
-            if(neighbor.fCost() < leastCost.fCost()){
+
+            if (neighbor.fCost() < leastCost.fCost()) {
                 leastCost = neighbor;
                 continue;
             }
-            if(neighbor.fCost() == leastCost.fCost()){
-                if(neighbor.hCost() < leastCost.hCost()) {
+            if (neighbor.fCost() == leastCost.fCost()) {
+                if (neighbor.hCost() < leastCost.hCost()) {
                     leastCost = neighbor;
                     continue;
                 }
 
-                if(neighbor.hCost() == leastCost.hCost()){
-                    //the f cost and the h cost are equal, choose a block with the least dangers
+                //the f cost and the h cost are equal, choose the safest block
+                if (neighbor.hCost() == leastCost.hCost()) {
                     Block least = leastCost.block;
                     Block neighborBlock = neighbor.block;
 
-                    if(neighborBlock.hasGold() || neighborBlock.hasGlitter()){
+                    //if the neighboring block has gold or glitter
+                    if (neighborBlock.hasGold() || neighborBlock.hasGlitter()) {
                         leastCost = neighbor;
                         break;
+                    }
+
+                    if(neighborBlock.hasPit() || neighborBlock.hasWumpus()){
+
                     }
                 }
             }
         }
 
-        if(Util.isAboveBlock(this.block, leastCost.block)){
-            m = Move.UP;
+        Block leastBlock = leastCost.getBlock();
+        if(Util.isAboveBlock(this.block, leastBlock)){
+            return Move.UP;
         }
-        if(Util.isBelowBlock(this.block, leastCost.block)){
-            m = Move.DOWN;
+        if(Util.isBelowBlock(this.block, leastBlock)){
+            return Move.DOWN;
         }
-        if(Util.isLeftBlock(this.block, leastCost.block)){
-            m = Move.LEFT;
+        if(Util.isLeftBlock(this.block, leastBlock)){
+            return Move.LEFT;
         }
-        if(Util.isRightBlock(this.block, leastCost.block)){
-            m = Move.RIGHT;
+        if(Util.isRightBlock(this.block, leastBlock)){
+            return Move.RIGHT;
+        }
+        //if the least cost block is the current block
+        if((this.block.getPoint().getX() == leastBlock.getPoint().getX()) &&
+                (this.block.getPoint().getY() == leastBlock.getPoint().getY())){
+            return Move.GRAB;
         }
 
-        for (DecisionNode neighbor : neighbors) {
-            if(!neighbor.isTraversable()){
-                continue;
-            }
-            Block neighborBlock = neighbor.block;
-
-            if(neighborBlock.hasPit()){
-                continue;
-            }
-
-            if(Util.isAboveBlock(this.block, neighborBlock)){
-                m = Move.UP;
-            }
-            if(Util.isBelowBlock(this.block, neighborBlock)){
-                m = Move.DOWN;
-            }
-            if(Util.isLeftBlock(this.block, neighborBlock)){
-                m = Move.LEFT;
-            }
-            if(Util.isRightBlock(this.block, neighborBlock)){
-                m = Move.RIGHT;
-            }
-
-        }
-        return m;
+        return Move.GRAB;
     }
 }

@@ -17,17 +17,19 @@ import java.util.List;
 
 /**
  * Created by Deep on 5/2/16.
+ *
  */
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
 
     private GameMap map;
 
-    private List<Block> mData;
+    private final List<Block> mData;
 
     public ListAdapter(){
         mData = new ArrayList<>();
         this.map = GameMap.init();
-        mData = map.getListOfBlocks();
+        mData.removeAll(mData);
+        mData.addAll(map.getListOfBlocks());
     }
 
     @Override
@@ -76,14 +78,15 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
 
     public void solve() {
         AStar aStar = new AStar(map.getPlayerBlock(), map, this);
-        mData = map.getListOfBlocks();
+        mData.removeAll(mData);
+        mData.addAll(map.getListOfBlocks());
         //notifyDataSetChanged();
     }
 
     public void updateData(GameMap map) {
-        this.map = map;
-        mData = map.getListOfBlocks();
-        notifyDataSetChanged();
+        //this.map = map;
+        //mData = map.getListOfBlocks();
+        //notifyDataSetChanged();
     }
 
     public void onWin() {

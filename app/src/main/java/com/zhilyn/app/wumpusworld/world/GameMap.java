@@ -164,7 +164,7 @@ public class GameMap {
     private void loadPit() {
         System.out.print("Loading Pits... ");
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 1; i++) {
             Pit pit = new Pit();
             boolean couldAddPiece = false;
 
