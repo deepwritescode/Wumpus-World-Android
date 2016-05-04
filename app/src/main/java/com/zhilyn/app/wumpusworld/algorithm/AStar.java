@@ -19,6 +19,7 @@ public class AStar {
     //the least cost to the goal, from (0, 0) to the block with glitter (x1, y1)
     private final int LEAST_COST;
     private final Block startingBlock;
+    private DecisionNode solutionPath;
 
     public AStar(Block start, GameMap map, ListAdapter adapter) {
         this.startingBlock = start;
@@ -48,11 +49,16 @@ public class AStar {
         }
     }
 
+    public DecisionNode getSolutionPath() {
+        return solutionPath;
+    }
+
     private List<DecisionNode.Move> getSolution(GameMap map, Block start, Block end) {
         List<DecisionNode.Move> moves = new ArrayList<>();
 
+        List<DecisionNode> path = new ArrayList<>();
         //gets the last node
-        DecisionNode current = makePath(map);
+        DecisionNode current = this.solutionPath = makePath(map);
         while (true){
             if(current.parent == null){
                 break;
@@ -109,6 +115,7 @@ public class AStar {
 
             //the path is already found
             if(currentNodeBlock.hasGold() || currentNodeBlock.hasGlitter() || (currentNodeBlock == end)){
+                Log.e("A-star", "found solution");
                 return current;
             }
 
@@ -127,10 +134,10 @@ public class AStar {
                 }
 
                 //calculate the new final path value of the neighbor node
-                int nextF = neighbor.calculateF();
+                int nextF = neighbor.calculateF() + current.gCost();
 
                 //if the new path to the neighbor is shorter or the neighbor is not in the open list
-                if((nextF < current.fCost()) || !opened.contains(neighbor)){
+                if((nextF < current.fCost()) || !opened.contains(neighbor) || !closed.contains(neighbor)){
                     //calculate the neighbor's F cost
                     neighbor.calculateF();
 
@@ -164,6 +171,7 @@ public class AStar {
                 if(node.hCost() < selected.hCost()){
                     selected = node;
                 }
+                //selected = node;
             }else if(node.fCost() < selected.fCost()){
                 selected = node;
             }

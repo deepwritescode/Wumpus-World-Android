@@ -19,9 +19,9 @@ public class DecisionNode {
     private static final int MOVE_GRAB_GOLD = 0;
     private static final int MOVE_UDLR = 1;
     private static final int MOVE_SHOOT = 10;
-    private static final int MOVE_DANGER = 1000;
+    private static final int MOVE_DANGER = 100;
 
-    private static final int NOT_POSSIBLE = -1;
+    private static final int NOT_POSSIBLE = 1000;
 
     public DecisionNode parent = null;
 
@@ -81,7 +81,7 @@ public class DecisionNode {
         }
 
         if(this.block.hasWumpus()){
-            return this.heuristic = MOVE_SHOOT + costToGoal;
+            return this.heuristic = MOVE_DANGER + costToGoal;
         }
 
         return this.heuristic = costToGoal;
@@ -167,7 +167,7 @@ public class DecisionNode {
     }
 
     /**
-     * @return the best move suggested to be made
+     * @return the best move suggested to be made from this node
      * */
     public Move getBestMove(){
         if(this.block.hasGold()){
