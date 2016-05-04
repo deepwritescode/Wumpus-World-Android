@@ -21,6 +21,8 @@ public class DecisionNode {
     private static final int MOVE_SHOOT = 10;
     private static final int MOVE_DANGER = 1000;
 
+    private static final int NOT_POSSIBLE = -1;
+
     public DecisionNode parent = null;
 
     //the block to make the move on
@@ -65,6 +67,9 @@ public class DecisionNode {
      * @return heuristic cost to move from this
      */
     public int calculateHeuristic() {
+        if(this.block == null){
+            this.heuristic = NOT_POSSIBLE;
+        }
         int costToGoal = GameMap.instance.getCostToGoalFromBlock(this.block);
 
         if(this.block.hasGold()) {
@@ -125,6 +130,10 @@ public class DecisionNode {
      */
     public DecisionNode(Block current) {
         this.block = current;
+        if(this.block == null){
+            this.heuristic = NOT_POSSIBLE;
+            this.gCost = NOT_POSSIBLE;
+        }
     }
 
     /**
@@ -163,19 +172,23 @@ public class DecisionNode {
     public Move getBestMove(){
         Move m = Move.GRAB;
         //decision node for the best decision that can be made
-        DecisionNode leastCost = neighbors.get(0);
+        DecisionNode leastCost = null;
 
         //loop through the neighboring nodes to find the decision node with least F cost
         for (DecisionNode neighbor : neighbors) {
+            if(leastCost == null){
+                leastCost = neighbor;
+            }
+            if(!neighbor.isTraversable()){
+                continue;
+            }
             if(neighbor.fCost() > leastCost.fCost()){
                 continue;
             }
-
             if(neighbor.fCost() < leastCost.fCost()){
                 leastCost = neighbor;
                 continue;
             }
-
             if(neighbor.fCost() == leastCost.fCost()){
                 if(neighbor.hCost() < leastCost.hCost()) {
                     leastCost = neighbor;
@@ -209,6 +222,9 @@ public class DecisionNode {
         }
 
         for (DecisionNode neighbor : neighbors) {
+            if(!neighbor.isTraversable()){
+                continue;
+            }
             Block neighborBlock = neighbor.block;
 
             if(neighborBlock.hasPit()){

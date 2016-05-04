@@ -77,7 +77,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
     public void solve() {
         AStar aStar = new AStar(map.getPlayerBlock(), map, this);
         mData = map.getListOfBlocks();
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
     public void updateData(GameMap map) {

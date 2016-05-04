@@ -362,12 +362,14 @@ public class GameMap {
      * */
     public Block getPlayerBlock() {
         boolean foundPlayer = false;
-        Block block = getBlock(0, 0);
+        Block block = null;
+
         for (int x = 0; x < 4; x++) {
             for (int y = 0; y < 4; y++) {
-                foundPlayer = grid[x][y].hasPlayer();
+                block = grid[x][y];
+                foundPlayer = block.hasPlayer();
                 if(foundPlayer){
-                    return grid[x][y];
+                    return block;
                 }
             }
         }
@@ -388,24 +390,16 @@ public class GameMap {
         List<Block> blocks = new ArrayList<>();
 
         Block b = getBlock(x + 1, y);
-        if(b != null){
-            blocks.add(b);
-        }
+        blocks.add(b);
 
         b = getBlock(x, y + 1);
-        if(b != null){
-            blocks.add(b);
-        }
+        blocks.add(b);
 
         b = getBlock(x - 1, y);
-        if(b != null){
-            blocks.add(b);
-        }
+        blocks.add(b);
 
         b = getBlock(x, y - 1);
-        if(b != null){
-            blocks.add(b);
-        }
+        blocks.add(b);
 
         return blocks;
     }

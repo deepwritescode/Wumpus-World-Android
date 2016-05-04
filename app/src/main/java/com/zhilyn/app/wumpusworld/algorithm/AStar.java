@@ -5,7 +5,6 @@ import android.util.Log;
 import com.zhilyn.app.wumpusworld.ListAdapter;
 import com.zhilyn.app.wumpusworld.world.GameMap;
 import com.zhilyn.app.wumpusworld.world.pieces.Block;
-import com.zhilyn.app.wumpusworld.world.pieces.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +23,6 @@ public class AStar {
     public AStar(Block start, GameMap map, ListAdapter adapter) {
         this.startingBlock = start;
         this.LEAST_COST = map.getCostToGoalFromBlock(startingBlock);
-
-        Player player = startingBlock.getPlayer();
 
         List<DecisionNode.Move> solution = getSolution(map, map.getPlayerBlock(), map.getDestinationBlock());
         for (DecisionNode.Move move : solution) {
@@ -53,14 +50,14 @@ public class AStar {
 
     private List<DecisionNode.Move> getSolution(GameMap map, Block start, Block end) {
         List<DecisionNode> tree = makePathTree(map);
-
         List<DecisionNode.Move> moves = new ArrayList<>();
 
-        for (DecisionNode current : tree) {
-            boolean continueLooping = true;
-            while (continueLooping){
-                if(current.parent == null){
-                    continueLooping = false;
+        for (int i = 0; i < tree.size(); i++) {
+            DecisionNode current = tree.get(i);
+
+            while (true) {
+                if (current.parent == null) {
+                    break;
                 }
                 DecisionNode.Move move = current.getBestMove();
                 Log.e("Move Tree", move.toString());
@@ -72,10 +69,9 @@ public class AStar {
 
         //gets the last node
         DecisionNode current = tree.get(tree.size() - 1);
-        boolean continueLooping = true;
-        while (continueLooping){
+        while (true){
             if(current.parent == null){
-                continueLooping = false;
+                break;
             }
             DecisionNode.Move move = current.getBestMove();
             Log.e("Move Tree", move.toString());
@@ -132,10 +128,14 @@ public class AStar {
             List<DecisionNode> neighbors = current.getNeighbors();
             for (DecisionNode neighbor : neighbors) {
                 //if the neighbor is not traversable or it is in the closed list
-                Block neighboringBlock = neighbor.getBlock();
-                boolean traversable = neighboringBlock == null || neighboringBlock.hasPit() || neighboringBlock.hasWumpus();
+                boolean traversable = neighbor.isTraversable() ;
                 if(!traversable || closed.contains(neighbor)){
                     continue;
+                }
+
+                //add the neighbor to opened list if it's not in the opened list already
+                if(!opened.contains(neighbor)){
+                    opened.add(neighbor);
                 }
 
                 //calculate the new final path value of the neighbor node
@@ -149,10 +149,6 @@ public class AStar {
                     //set parent of the neighbor to current node so it can be traversed
                     neighbor.parent = current;
 
-                    //add the neighbor to opened list if it's not in the opened list already
-                    if(!opened.contains(neighbor)){
-                        opened.add(neighbor);
-                    }
                 }
             }
 

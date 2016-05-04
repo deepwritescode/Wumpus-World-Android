@@ -16,6 +16,9 @@ public class Util {
      * @param other     the other block to check
      * */
     public static boolean isAboveBlock(Block center, Block other){
+        if(other == null){
+            return false;
+        }
         int x0 = center.getPoint().getX();
         int y0 = center.getPoint().getY();
         int x1 = other.getPoint().getX();
@@ -36,6 +39,9 @@ public class Util {
      * @param other     the other block to check
      * */
     public static boolean isBelowBlock(Block center, Block other){
+        if(other == null){
+            return false;
+        }
         final int x0 = center.getPoint().getX();
         final int y0 = center.getPoint().getY();
         final int x1 = other.getPoint().getX();
@@ -56,6 +62,9 @@ public class Util {
      * @param other     the other block to check
      * */
     public static boolean isRightBlock(Block center, Block other){
+        if(other == null){
+            return false;
+        }
         final int x0 = center.getPoint().getX();
         final int y0 = center.getPoint().getY();
         final int x1 = other.getPoint().getX();
@@ -76,6 +85,9 @@ public class Util {
      * @param other     the other block to check
      * */
     public static boolean isLeftBlock(Block center, Block other){
+        if(other == null){
+            return false;
+        }
         final int x0 = center.getPoint().getX();
         final int y0 = center.getPoint().getY();
         final int x1 = other.getPoint().getX();
