@@ -20,14 +20,14 @@ import java.util.List;
  */
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
 
-    private final GameMap map;
+    private GameMap map;
 
     private List<Block> mData;
 
     public ListAdapter(){
         mData = new ArrayList<>();
         this.map = GameMap.init();
-        mData = map.getListBlock();
+        mData = map.getListOfBlocks();
     }
 
     @Override
@@ -75,9 +75,19 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
     }
 
     public void solve() {
-        AStar aStar = new AStar(map);
-        mData = map.getListBlock();
+        AStar aStar = new AStar(map.getPlayerBlock(), map, this);
+        mData = map.getListOfBlocks();
         notifyDataSetChanged();
+    }
+
+    public void updateData(GameMap map) {
+        this.map = map;
+        mData = map.getListOfBlocks();
+        notifyDataSetChanged();
+    }
+
+    public void onWin() {
+        //called when the player is at the destination
     }
 
     public class ListItem extends RecyclerView.ViewHolder{

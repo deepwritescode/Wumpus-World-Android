@@ -7,7 +7,7 @@ import java.util.List;
  * Created by Deep on 4/27/16.
  * represents a block on the game map
  */
-public class Block implements Player.PlayerAction {
+public class Block{
 
     //constant that states weather the block is a safe block or not
     private final boolean IS_SAFE_BLOCK;
@@ -37,9 +37,6 @@ public class Block implements Player.PlayerAction {
         }
 
         this.content.add(piece);
-        if(piece.getType() == GamePiece.Type.PLAYER){
-            ((Player) piece).action = this;
-        }
 
         return true;
     }
@@ -106,18 +103,6 @@ public class Block implements Player.PlayerAction {
         }
     }
 
-    @Override
-    public void onPercept() {
-
-    }
-
-    @Override
-    public void onGrab() {
-        if(hasGold()){
-            System.out.println("You win!");
-        }
-    }
-
     public void plot(int x, int y) {
         this.point = new Point(x, y);
     }
@@ -151,6 +136,15 @@ public class Block implements Player.PlayerAction {
             }
         }
         return null;
+    }
+
+    public boolean hasPlayer() {
+        for (GamePiece gamePiece : content) {
+            if(gamePiece.getType() == GamePiece.Type.PLAYER){
+                return true;
+            }
+        }
+        return false;
     }
 
     public static class Point {

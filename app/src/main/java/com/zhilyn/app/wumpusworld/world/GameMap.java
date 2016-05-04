@@ -1,6 +1,8 @@
 package com.zhilyn.app.wumpusworld.world;
 
 
+import android.util.Log;
+
 import com.zhilyn.app.wumpusworld.world.pieces.Block;
 import com.zhilyn.app.wumpusworld.world.pieces.Breeze;
 import com.zhilyn.app.wumpusworld.world.pieces.GamePiece;
@@ -20,6 +22,7 @@ import java.util.Random;
  * class containing the Wumpus world map with various constants
  */
 public class GameMap {
+    public static GameMap instance;
 
     private static final int X_COUNT = 4;
     private static final int Y_COUNT = 4;
@@ -55,6 +58,8 @@ public class GameMap {
         map.loadGold();
         map.loadPit();
         map.loadWumpus();
+
+        GameMap.instance = map;
 
         return map;
     }
@@ -271,28 +276,15 @@ public class GameMap {
     }
 
     /**
-     * gets the cost from the block to the goal
+     * gets the distance from the block to the goal
+     *
      * @param block the block to check
      * @return the cost to get from the block to the goal
      * */
     public int getCostToGoalFromBlock(Block block) {
         Block.Point start = block.getPoint();
-        Block.Point end = getDestinationBlock().getPoint();
-        return getDistance(start, end);
-    }
-
-    /**
-     * returns the distance from point a to point b
-     * @param pointA the starting point
-     * @param pointB the ending point
-     * */
-    public int getDistance(Block.Point pointA, Block.Point pointB){
-        int x1 = pointA.getX() + 1;
-        int y1 = pointA.getY() + 1;
-
-        int x2 = pointB.getX() + 1;
-        int y2 = pointB.getY() + 1;
-        return ((x2 - x1) + (y2 - y1));
+        Block.Point end = this.getDestinationBlock().getPoint();
+        return Util.getDistance(start, end);
     }
 
     /**
@@ -333,21 +325,131 @@ public class GameMap {
         return isHit;
     }
 
+    public void movePlayerRight(){
+        Block playerBlock = getPlayerBlock();
+        Block.Point point = playerBlock.getPoint();
+        boolean result = movePlayer(point.getX(), point.getY(), point.getX() + 1, point.getY());
+
+        if(!result) Log.e("movePlayerRight()", ""+result);
+    }
+
+    public void movePlayerUp(){
+        Block playerBlock = getPlayerBlock();
+        Block.Point point = playerBlock.getPoint();
+        boolean result = movePlayer(point.getX(), point.getY(), point.getX(), point.getY() + 1);
+
+        if(!result) Log.e("movePlayerUp()", ""+result);
+    }
+
+    public void movePlayerLeft(){
+        Block playerBlock = getPlayerBlock();
+        Block.Point point = playerBlock.getPoint();
+        boolean result = movePlayer(point.getX(), point.getY(), point.getX() - 1, point.getY());
+
+        if(!result) Log.e("movePlayerLeft()", ""+result);
+    }
+
+    public void movePlayerDown(){
+        Block playerBlock = getPlayerBlock();
+        Block.Point point = playerBlock.getPoint();
+        boolean result = movePlayer(point.getX(), point.getY(), point.getX(), point.getY() - 1);
+
+        if(!result) Log.e("movePlayerDown()", ""+result);
+    }
+
+    /***
+     * gets the block the player is on
+     * */
+    public Block getPlayerBlock() {
+        boolean foundPlayer = false;
+        Block block = getBlock(0, 0);
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                foundPlayer = grid[x][y].hasPlayer();
+                if(foundPlayer){
+                    return grid[x][y];
+                }
+            }
+        }
+        return block;
+    }
+
+    /**
+     * @return list of blocks that are adjacent to the block
+     * */
+    public List<Block> getAdjacentBlocks(Block block){
+        return getAdjacentBlocks(block.getPoint().getX(), block.getPoint().getY());
+    }
+
+    /**
+     * @return list of blocks that are adjacent to the block
+     * */
+    public List<Block> getAdjacentBlocks(final int x, final int y){
+        List<Block> blocks = new ArrayList<>();
+
+        Block b = getBlock(x + 1, y);
+        if(b != null){
+            blocks.add(b);
+        }
+
+        b = getBlock(x, y + 1);
+        if(b != null){
+            blocks.add(b);
+        }
+
+        b = getBlock(x - 1, y);
+        if(b != null){
+            blocks.add(b);
+        }
+
+        b = getBlock(x, y - 1);
+        if(b != null){
+            blocks.add(b);
+        }
+
+        return blocks;
+    }
+
+    /**
+     * moves the player from (x0, y0) to (x1, y1)
+     * returns true if the player was moved
+     * */
+    public boolean movePlayer(final int x0, final int y0, final int x1, final int y1){
+        Block from = this.getBlock(x0, y0);
+        Block to = this.getBlock(x1, y1);
+
+        final Player player = from.removePlayer();
+
+        return to.addPiece(player);
+    }
+
     /**
      * @return the list of blocks to put into the ListAdapter in the order needed
      * */
-    public List<Block> getListBlock(){
+    public List<Block> getListOfBlocks(){
         List<Block> data = new ArrayList<>();
-        GameMap map = GameMap.init();
-        Block[][] grid = map.getGrid();
 
         for (int y = 3; y >= 0; y--) {
             for (int x = 0; x < 4; x++) {
-                Block b = grid[x][y];
+                Block b = this.grid[x][y];
                 data.add(b);
             }
         }
 
         return data;
+    }
+
+    /**
+     * removes wumpus from the game map
+     * */
+    public void killWumpus() {
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                Block b = grid[x][y];
+                if(b.hasWumpus()){
+                    b.killWumpus();
+                }
+            }
+        }
     }
 }
