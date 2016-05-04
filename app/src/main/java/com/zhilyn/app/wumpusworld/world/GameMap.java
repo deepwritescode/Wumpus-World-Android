@@ -414,7 +414,10 @@ public class GameMap {
      * moves the player from (x0, y0) to (x1, y1)
      * returns true if the player was moved
      * */
-    public boolean movePlayer(final int x0, final int y0, final int x1, final int y1){
+    private boolean movePlayer(final int x0, final int y0, final int x1, final int y1){
+        if(!inBounds(x0) || !inBounds(x1) || !inBounds(y0) || !inBounds(y1)){
+            return false;
+        }
         Block from = this.getBlock(x0, y0);
         Block to = this.getBlock(x1, y1);
 

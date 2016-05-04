@@ -14,16 +14,14 @@ import java.util.List;
  *      and the cost to get to the goal from the decision made
  */
 public class DecisionNode {
-    //if there is no heuristic value for the decision
-    private static final int NOT_CALCULATED = -1;
 
     //number values for moves
+    private static final int MOVE_GRAB_GOLD = 0;
     private static final int MOVE_UDLR = 1;
-    private static final int MOVE_GRAB_GOLD = -1000;
     private static final int MOVE_SHOOT = 10;
     private static final int MOVE_DANGER = 1000;
 
-    public DecisionNode parent;
+    public DecisionNode parent = null;
 
     //the block to make the move on
     private Block block;
@@ -36,6 +34,10 @@ public class DecisionNode {
     private int gCost = 0;
     //final cost (g+h)
     private int fCost = 0;
+
+    public boolean isTraversable(){
+        return block != null;
+    }
 
     /**
      * A Star says f(n) = g(n) + h(n)
@@ -63,19 +65,21 @@ public class DecisionNode {
      * @return heuristic cost to move from this
      */
     public int calculateHeuristic() {
+        int costToGoal = GameMap.instance.getCostToGoalFromBlock(this.block);
+
         if(this.block.hasGold()) {
-            return this.heuristic = MOVE_GRAB_GOLD;
+            return this.heuristic = 0;
         }
 
         if(this.block.hasPit()){
-            return this.heuristic = MOVE_DANGER;
+            return this.heuristic = MOVE_DANGER + costToGoal;
         }
 
         if(this.block.hasWumpus()){
-            return this.heuristic = MOVE_SHOOT;
+            return this.heuristic = MOVE_SHOOT + costToGoal;
         }
 
-        return this.heuristic = GameMap.instance.getCostToGoalFromBlock(this.block);
+        return this.heuristic = costToGoal;
     }
 
     /**
@@ -93,9 +97,12 @@ public class DecisionNode {
         return this.gCost;
     }
 
-    public void generateNeighbors() {
+    /**
+     * generates the neighboring nodes
+     * */
+    public void generateNeighbors(GameMap map) {
         List<DecisionNode> neighbors = new ArrayList<>();
-        List<Block> blocks = GameMap.instance.getAdjacentBlocks(this.block);
+        List<Block> blocks = map.getAdjacentBlocks(this.block);
 
         for (Block neighbor : blocks) {
             DecisionNode node = new DecisionNode(neighbor);
@@ -151,19 +158,54 @@ public class DecisionNode {
     }
 
     /**
-     * TODO this
      * @return the best move suggested to be made
      * */
     public Move getBestMove(){
         Move m = Move.GRAB;
+        //decision node for the best decision that can be made
         DecisionNode leastCost = neighbors.get(0);
-        List<DecisionNode> bestNodes = new ArrayList<>();
 
-        //loop through to find the node with least
+        //loop through the neighboring nodes to find the decision node with least F cost
         for (DecisionNode neighbor : neighbors) {
+            if(neighbor.fCost() > leastCost.fCost()){
+                continue;
+            }
+
             if(neighbor.fCost() < leastCost.fCost()){
                 leastCost = neighbor;
+                continue;
             }
+
+            if(neighbor.fCost() == leastCost.fCost()){
+                if(neighbor.hCost() < leastCost.hCost()) {
+                    leastCost = neighbor;
+                    continue;
+                }
+
+                if(neighbor.hCost() == leastCost.hCost()){
+                    //the f cost and the h cost are equal, choose a block with the least dangers
+                    Block least = leastCost.block;
+                    Block neighborBlock = neighbor.block;
+
+                    if(neighborBlock.hasGold() || neighborBlock.hasGlitter()){
+                        leastCost = neighbor;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(Util.isAboveBlock(this.block, leastCost.block)){
+            m = Move.UP;
+        }
+        if(Util.isBelowBlock(this.block, leastCost.block)){
+            m = Move.DOWN;
+        }
+        if(Util.isLeftBlock(this.block, leastCost.block)){
+            m = Move.LEFT;
+        }
+        if(Util.isRightBlock(this.block, leastCost.block)){
+            m = Move.RIGHT;
         }
 
         for (DecisionNode neighbor : neighbors) {
@@ -177,13 +219,13 @@ public class DecisionNode {
                 m = Move.UP;
             }
             if(Util.isBelowBlock(this.block, neighborBlock)){
-                return Move.DOWN;
+                m = Move.DOWN;
             }
             if(Util.isLeftBlock(this.block, neighborBlock)){
-                return Move.LEFT;
+                m = Move.LEFT;
             }
             if(Util.isRightBlock(this.block, neighborBlock)){
-                return Move.RIGHT;
+                m = Move.RIGHT;
             }
 
         }

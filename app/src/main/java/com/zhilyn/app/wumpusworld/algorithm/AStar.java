@@ -45,9 +45,7 @@ public class AStar {
                 case GRAB:
                     adapter.onWin();
                     continue;
-                case SHOOT:
-                    map.killWumpus();
-                    break;
+
             }
             adapter.updateData(map);
         }
@@ -55,17 +53,32 @@ public class AStar {
 
     private List<DecisionNode.Move> getSolution(GameMap map, Block start, Block end) {
         List<DecisionNode> tree = makePathTree(map);
+
         List<DecisionNode.Move> moves = new ArrayList<>();
+
+        for (DecisionNode current : tree) {
+            boolean continueLooping = true;
+            while (continueLooping){
+                if(current.parent == null){
+                    continueLooping = false;
+                }
+                DecisionNode.Move move = current.getBestMove();
+                Log.e("Move Tree", move.toString());
+                moves.add(move);
+
+                current = current.parent;
+            }
+        }
 
         //gets the last node
         DecisionNode current = tree.get(tree.size() - 1);
-
         boolean continueLooping = true;
         while (continueLooping){
             if(current.parent == null){
                 continueLooping = false;
             }
             DecisionNode.Move move = current.getBestMove();
+            Log.e("Move Tree", move.toString());
             moves.add(move);
 
             current = current.parent;
@@ -96,6 +109,7 @@ public class AStar {
 
         int loopCount = 0;
         while (!opened.isEmpty() || !shouldStop(loopCount)) {
+            loopCount += 1;
             DecisionNode current = nodeWithLowestF(opened);
             if(current == null){
                 break;
@@ -105,7 +119,7 @@ public class AStar {
             closed.add(current);
 
             //generate the neighbors for the current node and set the neighbor parent as the current node
-            current.generateNeighbors();
+            current.generateNeighbors(map);
 
             Block currentNodeBlock = current.getBlock();
 
@@ -119,16 +133,16 @@ public class AStar {
             for (DecisionNode neighbor : neighbors) {
                 //if the neighbor is not traversable or it is in the closed list
                 Block neighboringBlock = neighbor.getBlock();
-                boolean notTraversable = neighboringBlock == null || neighboringBlock.hasPit();
-                if(notTraversable || closed.contains(neighbor)){
+                boolean traversable = neighboringBlock == null || neighboringBlock.hasPit() || neighboringBlock.hasWumpus();
+                if(!traversable || closed.contains(neighbor)){
                     continue;
                 }
 
                 //calculate the new final path value of the neighbor node
-                int newFValue = neighbor.calculateF();
+                int nextF = neighbor.calculateF();
 
                 //if the new path to the neighbor is shorter or the neighbor is not in the open list
-                if((newFValue < current.fCost()) || !opened.contains(neighbor)){
+                if((nextF < current.fCost()) || !opened.contains(neighbor)){
                     //calculate the neighbor's F cost
                     neighbor.calculateF();
 
@@ -144,14 +158,22 @@ public class AStar {
 
         }
 
+        Log.e("opened", ""+opened.size());
+        Log.e("closed", ""+closed.size());
+        Log.e("loopCount", ""+loopCount);
+
         return closed;
 
     }
 
     private DecisionNode nodeWithLowestF(List<DecisionNode> opened) {
-        DecisionNode selected = opened.get(0);
+        DecisionNode selected = null;
         //iterate through the decision nodes
         for (DecisionNode node : opened) {
+            if(selected == null){
+                selected = node;
+                continue;
+            }
             //if the f cost is == the final cost of the selected
             if(node.fCost() == selected.fCost()){
                 //and if the h cost is less than selected
@@ -165,7 +187,7 @@ public class AStar {
         return selected;
     }
 
-    private boolean shouldStop(int loopCount) {
-        return loopCount > 1000;
+    private boolean shouldStop(final int loopCount) {
+        return loopCount >= 1000;
     }
 }
