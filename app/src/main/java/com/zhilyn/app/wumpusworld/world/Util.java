@@ -19,12 +19,12 @@ public class Util {
         if(other == null){
             return false;
         }
-        int x0 = center.getPoint().getX();
-        int y0 = center.getPoint().getY();
-        int x1 = other.getPoint().getX();
-        int y1 = other.getPoint().getY();
+        final int x0 = center.getPoint().getX();
+        final int y0 = center.getPoint().getY();
+        final int x1 = other.getPoint().getX();
+        final int y1 = other.getPoint().getY();
 
-        if((y1 + 1) == y0){
+        if((y0 + 1) == y1){
             if(x1 == x0) {
                 return true;
             }
@@ -47,7 +47,7 @@ public class Util {
         final int x1 = other.getPoint().getX();
         final int y1 = other.getPoint().getY();
 
-        if((y1 - 1) == y0){
+        if((y0 - 1) == y1){
             if(x1 == x0) {
                 return true;
             }
@@ -71,7 +71,7 @@ public class Util {
         final int y1 = other.getPoint().getY();
 
         if(y1 == y0){
-            if((x1 + 1) == x0) {
+            if((x0 + 1) == x1) {
                 return true;
             }
         }
@@ -94,7 +94,7 @@ public class Util {
         final int y1 = other.getPoint().getY();
 
         if(y1 == y0){
-            if((x1 - 1) == x0){
+            if((x0 - 1) == x1){
                 return true;
             }
         }

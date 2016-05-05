@@ -45,7 +45,7 @@ public class DecisionNode {
      * A Star says f(n) = g(n) + h(n)
      * */
     public int calculateF() {
-        this.heuristic = calculateHeuristic();
+        this.heuristic = calculateH();
         this.gCost = calculateG();
         return this.fCost = this.heuristic + this.gCost;
     }
@@ -66,7 +66,7 @@ public class DecisionNode {
      * if there is a pit or wumpus then it will calculate accordingly
      * @return heuristic cost to move from this
      */
-    public int calculateHeuristic() {
+    public int calculateH() {
         if(this.block == null){
             this.heuristic = NOT_POSSIBLE;
         }
@@ -170,6 +170,8 @@ public class DecisionNode {
      * @return the best move suggested to be made from this node
      * */
     public Move getBestMove(){
+        //if(this.parent != null) return parent.getBestMove();
+
         if(this.block.hasGold()){
             return Move.GRAB;
         }

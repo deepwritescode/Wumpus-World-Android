@@ -1,7 +1,6 @@
 package com.zhilyn.app.wumpusworld;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 import com.zhilyn.app.wumpusworld.algorithm.AStar;
 import com.zhilyn.app.wumpusworld.algorithm.DecisionNode;
 import com.zhilyn.app.wumpusworld.world.GameMap;
+import com.zhilyn.app.wumpusworld.world.Util;
 import com.zhilyn.app.wumpusworld.world.pieces.Block;
 import com.zhilyn.app.wumpusworld.world.pieces.GamePiece;
 
@@ -49,8 +49,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
         for (GamePiece piece : pieces) {
             switch (piece.getType()){
                 case PLAYER:
-                    holder.gold.setVisibility(View.VISIBLE);
-                    //holder.player.setVisibility(View.VISIBLE);
+                    holder.player.setVisibility(View.VISIBLE);
                     break;
                 case PIT:
                     holder.pit.setVisibility(View.VISIBLE);
@@ -65,11 +64,10 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
                     holder.stench.setVisibility(View.VISIBLE);
                     break;
                 case GLITTER:
-                    //holder.glitter.setVisibility(View.VISIBLE);
+                    holder.glitter.setVisibility(View.VISIBLE);
                     break;
                 case GOLD:
-                    holder.player.setVisibility(View.VISIBLE);
-                    //holder.gold.setVisibility(View.VISIBLE);
+                    holder.gold.setVisibility(View.VISIBLE);
                     break;
             }
         }
@@ -81,34 +79,47 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
     }
 
     public void solve(TextView textView) {
-        AStar aStar = new AStar(map.getPlayerBlock(), map, this);
+        textView.append("");
 
-        textView.setText(null);
-        DecisionNode current = aStar.getSolutionPath();
-        while (true){
-            if(current.parent == null){
-                break;
+        Block destination = this.map.getDestinationBlock();
+        List<DecisionNode.Move> moves = new ArrayList<>();
+
+        List<DecisionNode> solution = AStar.getSolution(this.map);
+        final int end = solution.size();
+        for (int i = 0; i < end; i++) {
+            if((i + 1) == end){
+                moves.add(DecisionNode.Move.GRAB);
+                continue;
             }
-            DecisionNode.Move move = current.getBestMove();
-            Log.e("Solution Move Tree", move.toString());
-            textView.append(move.toString() + ", ");
+            DecisionNode current = solution.get(i);
+            DecisionNode next = solution.get(i +1);
+            textView.append(current.getBlock().getPoint().toString() + " ");
 
-            current = current.parent;
+            Block currentBlock = current.getBlock();
+            Block nextBlock = next.getBlock();
+
+            if(Util.isAboveBlock(currentBlock, nextBlock)){
+                moves.add(DecisionNode.Move.UP);
+                continue;
+            }
+            if(Util.isLeftBlock(currentBlock, nextBlock)){
+                moves.add(DecisionNode.Move.LEFT);
+                continue;
+            }
+            if(Util.isRightBlock(currentBlock, nextBlock)){
+                moves.add(DecisionNode.Move.RIGHT);
+                continue;
+            }
+            if(Util.isBelowBlock(currentBlock, nextBlock)){
+                moves.add(DecisionNode.Move.DOWN);
+                continue;
+            }
         }
 
-        //mData.removeAll(mData);
-        //mData.addAll(map.getListOfBlocks());
-        //notifyDataSetChanged();
-    }
-
-    public void updateData(GameMap map) {
-        //this.map = map;
-        //mData = map.getListOfBlocks();
-        //notifyDataSetChanged();
-    }
-
-    public void onWin() {
-        //called when the player is at the destination
+        textView.append("\n");
+        for (DecisionNode.Move move : moves) {
+            textView.append(move.toString()+ " ");
+        }
     }
 
     public class ListItem extends RecyclerView.ViewHolder{

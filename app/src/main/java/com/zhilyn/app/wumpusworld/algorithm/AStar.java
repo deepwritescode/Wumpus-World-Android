@@ -2,7 +2,6 @@ package com.zhilyn.app.wumpusworld.algorithm;
 
 import android.util.Log;
 
-import com.zhilyn.app.wumpusworld.ListAdapter;
 import com.zhilyn.app.wumpusworld.world.GameMap;
 import com.zhilyn.app.wumpusworld.world.pieces.Block;
 
@@ -16,71 +15,46 @@ import java.util.List;
 public class AStar {
     private static final String TAG = "AStar";
 
-    //the least cost to the goal, from (0, 0) to the block with glitter (x1, y1)
-    private final int LEAST_COST;
-    private final Block startingBlock;
-    private DecisionNode solutionPath;
+    private GameMap map;
 
-    public AStar(Block start, GameMap map, ListAdapter adapter) {
-        this.startingBlock = start;
-        this.LEAST_COST = map.getCostToGoalFromBlock(startingBlock);
-
-        List<DecisionNode.Move> solution = getSolution(map, map.getPlayerBlock(), map.getDestinationBlock());
-        for (DecisionNode.Move move : solution) {
-            switch (move) {
-                case RIGHT:
-                    map.movePlayerRight();
-                    break;
-                case UP:
-                    map.movePlayerUp();
-                    break;
-                case LEFT:
-                    map.movePlayerLeft();
-                    break;
-                case DOWN:
-                    map.movePlayerDown();
-                    break;
-                case GRAB:
-                    adapter.onWin();
-                    continue;
-
-            }
-            adapter.updateData(map);
-        }
+    private AStar(GameMap map) {
+        this.map = map;
     }
 
-    public DecisionNode getSolutionPath() {
-        return solutionPath;
-    }
+    public static List<DecisionNode> getSolution(GameMap map) {
+        AStar aStar = new AStar(map);
 
-    private List<DecisionNode.Move> getSolution(GameMap map, Block start, Block end) {
-        List<DecisionNode.Move> moves = new ArrayList<>();
-
+        //list of decision nodes in order
+        List<DecisionNode> solution = new ArrayList<>();
+        //list of decision nodes in reverse order
         List<DecisionNode> path = new ArrayList<>();
-        //gets the last node
-        DecisionNode current = this.solutionPath = makePath(map);
-        while (true){
-            if(current.parent == null){
-                break;
-            }
-            DecisionNode.Move move = current.getBestMove();
-            Log.e("Solution Move Tree", move.toString());
-            moves.add(move);
 
+        DecisionNode current = aStar.makeNodePath();
+        while (current != null){
+            path.add(current);
             current = current.parent;
         }
 
-        return moves;
+        //loops from end to beginning adding the values to the ordered array
+        for (int i = path.size() - 1; i >= 0; i--) {
+            DecisionNode node = path.get(i);
+            solution.add(node);
+        }
+
+        solution.add(new DecisionNode(map.getDestinationBlock()));
+
+        return solution;
     }
 
     /**
      * core of the implementation of A*
+     * @return tree to the solution
      * */
-    private DecisionNode makePath(GameMap map) {
-        Block start = map.getPlayerBlock();
-        Block end = map.getDestinationBlock();
+    private DecisionNode makeNodePath() {
+        Block start = this.map.getPlayerBlock();
+        Block end = this.map.getDestinationBlock();
         if(start == null || end == null){
-            Log.e("makePath(map)", "start or end is null");
+            Log.e("makeNodePath(map)", "start or end is null");
         }
 
         //nodes that are opened but need to be solved
@@ -114,7 +88,7 @@ public class AStar {
             Block currentNodeBlock = current.getBlock();
 
             //the path is already found
-            if(currentNodeBlock.hasGold() || currentNodeBlock.hasGlitter() || (currentNodeBlock == end)){
+            if(currentNodeBlock.hasGold() || (currentNodeBlock == end)){
                 Log.e("A-star", "found solution");
                 return current;
             }
@@ -134,7 +108,7 @@ public class AStar {
                 }
 
                 //calculate the new final path value of the neighbor node
-                int nextF = neighbor.calculateF() + current.gCost();
+                int nextF = neighbor.calculateF();
 
                 //if the new path to the neighbor is shorter or the neighbor is not in the open list
                 if((nextF < current.fCost()) || !opened.contains(neighbor) || !closed.contains(neighbor)){
@@ -146,6 +120,8 @@ public class AStar {
 
                 }
             }
+
+            closed.add(current);
 
         }
 
