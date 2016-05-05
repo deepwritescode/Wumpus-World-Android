@@ -96,8 +96,9 @@ abstract class BaseNavActivity extends AppCompatActivity implements
 
                 break;
             case R.id.nav_about:
-                //if(!(this instanceof AboutActivity)) {i = new Intent(this, AboutActivity.class);}
-                break;
+                i = new Intent(this, AboutActivity.class);
+                startActivity(i);
+                return true;
             case R.id.nav_feedback:
                 //if(!(this instanceof FeedbackActivity)) {i = new Intent(this, FeedbackActivity.class);}
                 break;

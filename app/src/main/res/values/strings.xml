@@ -9,4 +9,22 @@
     <string name="nav_title_game">Game</string>
     <string name="nav_title_about">About</string>
     <string name="nav_title_feedback">Feedback</string>
+
+    <string name="activity_title_about">About</string>
+
+    <string name="about_content">
+        "This app was made for a class project, \n \n \n"
+
+        "A-Star algorithm \n \n"
+        "The A-Star algorithm is a search algorithm that is both complete and optimal. "
+        "That means that the search will always be completed and the best possbile search will be returned. "
+        "The algorithm solves the problem by calculating the g(n) + h(n) "
+
+        "\n \n \n "
+
+        "The professor gave me a "C" for the project… \n \n \n "
+
+        "What grade do you think I should have gotten on this project? "
+        "Let me know, leave me a review, hopefully we can hit 5k users by June "
+    </string>
 </resources>
