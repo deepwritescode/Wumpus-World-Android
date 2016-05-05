@@ -28,7 +28,7 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <RelativeLayout
-
+        android:visibility="invisible"
         android:id="@+id/container_solution"
         android:layout_gravity="bottom"
         android:background="#FFF"

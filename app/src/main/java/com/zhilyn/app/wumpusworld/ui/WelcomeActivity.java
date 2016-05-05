@@ -1,8 +1,6 @@
 package com.zhilyn.app.wumpusworld.ui;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.zhilyn.app.wumpusworld.R;
@@ -18,13 +16,9 @@ public class WelcomeActivity  extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(0, 0);
-        SharedPreferences prefs = getSharedPreferences(this.getClass().getSimpleName(), MODE_PRIVATE);
-        if(prefs.getBoolean(PREF_VISITED, false)){
-            Intent i = new Intent(this, AIActivity.class);
-            startActivity(i);
-            finish();
-        }
         setContentView(R.layout.activity_welcome);
+
+        setResult(RESULT_OK);
+
     }
 }

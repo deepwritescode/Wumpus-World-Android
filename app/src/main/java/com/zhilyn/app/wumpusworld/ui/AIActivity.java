@@ -1,5 +1,9 @@
 package com.zhilyn.app.wumpusworld.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -11,9 +15,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.zhilyn.app.wumpusworld.ListAdapter;
@@ -21,9 +28,13 @@ import com.zhilyn.app.wumpusworld.R;
 
 /**
  * this activity represents a page that has the solution to the game
- * */
+ */
 public class AIActivity extends BaseNavActivity implements
         SwipeRefreshLayout.OnRefreshListener {
+
+    private static final String PREF_VISITED = "pref-visited";
+    private static final String PREF = "pref";
+    private static final int WELCOME_REQUEST = 100;
 
     FloatingActionButton fabStart;
     RecyclerView recyclerview;
@@ -36,6 +47,7 @@ public class AIActivity extends BaseNavActivity implements
     private DrawerLayout mDrawer;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
+    private RelativeLayout solutionContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +58,14 @@ public class AIActivity extends BaseNavActivity implements
         setSupportActionBar(toolbar);
 
         solutionText = (TextView) findViewById(R.id.solution);
+        solutionContainer = (RelativeLayout) findViewById(R.id.container_solution);
+
+        SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
+        if (!prefs.getBoolean(PREF_VISITED, false)) {
+            //TODO
+            //startActivityForResult(new Intent(this, WelcomeActivity.class), WELCOME_REQUEST);
+        }
+
 
         recyclerview = (RecyclerView) findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
@@ -63,6 +83,7 @@ public class AIActivity extends BaseNavActivity implements
         fabStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showCard();
                 solveGame(v);
             }
         });
@@ -71,13 +92,76 @@ public class AIActivity extends BaseNavActivity implements
         fabClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                hideCard();
                 clear();
             }
         });
     }
 
+    private void showCard() {
+        if(solutionContainer.getVisibility() == View.VISIBLE){
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Animator animator = ViewAnimationUtils.createCircularReveal(solutionContainer,
+                    solutionContainer.getWidth(),
+                    solutionContainer.getHeight(),
+                    0,
+                    (float) Math.hypot(solutionContainer.getWidth(), solutionContainer.getHeight()));
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    solutionContainer.setVisibility(View.VISIBLE);
+                }
+            });
+            animator.setDuration(250);
+            animator.start();
+        } else {
+            solutionContainer.animate().alpha(1.0f).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    solutionContainer.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+    }
+
+    private void hideCard() {
+        if(solutionContainer.getVisibility() == View.INVISIBLE){
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Animator animatorHide = ViewAnimationUtils.createCircularReveal(solutionContainer,
+                    0,
+                    solutionContainer.getHeight(),
+                    (float) Math.hypot(solutionContainer.getWidth(), solutionContainer.getHeight()),
+                    0);
+            animatorHide.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    solutionContainer.setVisibility(View.INVISIBLE);
+                }
+            });
+            animatorHide.setDuration(250);
+            animatorHide.start();
+        } else {
+            solutionContainer.animate().alpha(0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    solutionContainer.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+    }
+
+    private float convertDpToPixel(float dp) {
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        return dp * (metrics.densityDpi / 160f);
+    }
+
     private void clear() {
         solutionText.setText(null);
+        hideCard();
     }
 
     private void solveGame(View v) {
@@ -110,6 +194,8 @@ public class AIActivity extends BaseNavActivity implements
 
     @Override
     public void onRefresh() {
+        hideCard();
+        clear();
         adapter = new ListAdapter();
         recyclerview.setAdapter(adapter);
         adapter.notifyDataSetChanged();
