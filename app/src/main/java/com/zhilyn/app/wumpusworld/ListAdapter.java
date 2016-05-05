@@ -92,8 +92,8 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
                 continue;
             }
             DecisionNode current = solution.get(i);
-            DecisionNode next = solution.get(i +1);
-            textView.append(current.getBlock().getPoint().toString() + " ");
+            DecisionNode next = solution.get(i + 1);
+            //textView.append(current.getBlock().getPoint().toString() + " ");
 
             Block currentBlock = current.getBlock();
             Block nextBlock = next.getBlock();
