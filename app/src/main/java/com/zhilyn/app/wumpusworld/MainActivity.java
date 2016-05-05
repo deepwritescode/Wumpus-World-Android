@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void solveGame(View v) {
+        solutionText.setText(null);
         adapter.solve(solutionText);
         //Snackbar.make(fabStart, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         adapter = new ListAdapter();
         recyclerview.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        solutionText.setText("");
         swipeRefreshLayout.setRefreshing(false);
     }
 }
