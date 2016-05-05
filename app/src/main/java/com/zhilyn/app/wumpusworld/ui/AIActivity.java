@@ -1,9 +1,11 @@
-package com.zhilyn.app.wumpusworld;
+package com.zhilyn.app.wumpusworld.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+import com.zhilyn.app.wumpusworld.ListAdapter;
+import com.zhilyn.app.wumpusworld.R;
+
+/**
+ * this activity represents a page that has the solution to the game
+ * */
+public class AIActivity extends BaseNavActivity implements
+        SwipeRefreshLayout.OnRefreshListener {
 
     FloatingActionButton fabStart;
     RecyclerView recyclerview;
@@ -24,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private SwipeRefreshLayout swipeRefreshLayout;
     private FloatingActionButton fabClear;
     private TextView solutionText;
+    private DrawerLayout mDrawer;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
 
         solutionText = (TextView) findViewById(R.id.solution);
 
@@ -41,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         adapter = new ListAdapter();
         final RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
-        RecyclerView.LayoutManager lm = new GridLayoutManager(MainActivity.this, 4, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager lm = new GridLayoutManager(AIActivity.this, 4, LinearLayoutManager.VERTICAL, false);
 
         recyclerview.setAdapter(adapter);
         recyclerview.setLayoutManager(lm);
@@ -103,5 +115,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         adapter.notifyDataSetChanged();
         solutionText.setText("");
         swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    protected int getSelfInNav() {
+        return R.id.nav_ai_bot;
     }
 }

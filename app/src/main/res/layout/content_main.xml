@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.zhilyn.app.wumpusworld.MainActivity"
+    tools:context=".ui.AIActivity"
     tools:showIn="@layout/activity_main">
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -28,12 +27,24 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <TextView
-        android:id="@+id/solution"
+    <RelativeLayout
+
+        android:id="@+id/container_solution"
         android:layout_gravity="bottom"
-        tools:text="SOLUTION"
-        android:gravity="center_horizontal"
+        android:background="#FFF"
+        android:padding="12dp"
+        style="@style/elevated"
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="150dp">
+
+        <TextView
+            android:id="@+id/solution"
+            android:layout_gravity="bottom"
+            tools:text="SOLUTION"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
 
 </FrameLayout>

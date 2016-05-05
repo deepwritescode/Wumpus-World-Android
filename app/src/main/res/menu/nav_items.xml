@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:visible="false"
+            android:id="@+id/nav_game"
+            android:title="@string/nav_title_game" />
+
+        <item
+            android:id="@+id/nav_ai_bot"
+            android:title="@string/nav_title_ai_bot" />
+
+    </group>
+
+    <item
+        android:checkable="false"
+        android:title="@string/nav_title_other">
+        <menu >
+            <item
+                android:id="@+id/nav_about"
+                android:title="@string/nav_title_about" />
+
+            <item
+                android:id="@+id/nav_feedback"
+                android:title="@string/nav_title_feedback" />
+        </menu>
+    </item>
+
+</menu>

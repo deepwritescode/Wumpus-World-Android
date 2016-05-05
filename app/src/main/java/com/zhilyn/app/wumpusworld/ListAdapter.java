@@ -45,7 +45,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
     public void onBindViewHolder(ListItem holder, int position) {
         Block b = mData.get(position);
         List<GamePiece> pieces = b.getPieces();
-        holder.mText.append(b.getPoint().toString());
+        //holder.mText.append(b.getPoint().toString());
         for (GamePiece piece : pieces) {
             switch (piece.getType()){
                 case PLAYER:

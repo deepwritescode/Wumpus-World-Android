@@ -25,4 +25,8 @@
     <style name="AppTheme.TransparentStatus" parent="AppTheme.NoActionBar">
     </style>
 
+    <style name="elevated">
+
+    </style>
+
 </resources>
