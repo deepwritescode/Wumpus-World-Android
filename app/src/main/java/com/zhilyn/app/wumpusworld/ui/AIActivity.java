@@ -2,6 +2,7 @@ package com.zhilyn.app.wumpusworld.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,7 +65,6 @@ public class AIActivity extends BaseNavActivity implements
             //TODO
             //startActivityForResult(new Intent(this, WelcomeActivity.class), WELCOME_REQUEST);
         }
-
 
         recyclerview = (RecyclerView) findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
@@ -167,8 +167,8 @@ public class AIActivity extends BaseNavActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return false;
+        getMenuInflater().inflate(R.menu.menu_ai, menu);
+        return true;
     }
 
     @Override
@@ -179,7 +179,8 @@ public class AIActivity extends BaseNavActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_help) {
+            startActivity(new Intent(AIActivity.this, AboutActivity.class));
             return true;
         }
 
