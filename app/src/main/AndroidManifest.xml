@@ -3,17 +3,12 @@
     package="com.zhilyn.app.wumpusworld">
 
     <application
+        android:name=".AppBase"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity
-            android:name=".ui.WelcomeActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.TransparentStatus"/>
-
         <activity
             android:name=".ui.AIActivity"
             android:label="@string/app_name"
@@ -24,12 +19,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".ui.WelcomeActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.TransparentStatus" />
         <activity
             android:name=".ui.AboutActivity"
             android:label="@string/activity_title_about"
             android:theme="@style/AppTheme.TransparentStatus" />
-
+        <activity
+            android:name=".ui.RulesActivity"
+            android:label="@string/activity_title_rules"
+            android:theme="@style/AppTheme.TransparentStatus" />
+        <activity
+            android:name=".ui.GameActivity"
+            android:label="@string/title_activity_game"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

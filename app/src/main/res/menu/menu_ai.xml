@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.AIActivity">
     <item
-        android:id="@+id/action_help"
+        android:id="@+id/action_rules"
         android:orderInCategory="100"
         android:icon="@drawable/ic_help_24dp"
-        android:title="@string/action_help"
+        android:title="@string/action_rules"
         app:showAsAction="always" />
 </menu>

@@ -7,10 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,7 +20,7 @@ import android.view.ViewAnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.zhilyn.app.wumpusworld.ListAdapter;
+import com.zhilyn.app.wumpusworld.AIListAdapter;
 import com.zhilyn.app.wumpusworld.R;
 
 /**
@@ -40,13 +37,10 @@ public class AIActivity extends BaseNavActivity implements
     RecyclerView recyclerview;
     Toolbar toolbar;
 
-    private ListAdapter adapter;
+    private AIListAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private FloatingActionButton fabClear;
     private TextView solutionText;
-    private DrawerLayout mDrawer;
-    private ActionBarDrawerToggle toggle;
-    private NavigationView navigationView;
     private RelativeLayout solutionContainer;
 
     @Override
@@ -60,17 +54,11 @@ public class AIActivity extends BaseNavActivity implements
         solutionText = (TextView) findViewById(R.id.solution);
         solutionContainer = (RelativeLayout) findViewById(R.id.container_solution);
 
-        SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
-        if (!prefs.getBoolean(PREF_VISITED, false)) {
-            //TODO
-            //startActivityForResult(new Intent(this, WelcomeActivity.class), WELCOME_REQUEST);
-        }
-
         recyclerview = (RecyclerView) findViewById(R.id.recycler_view);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        adapter = new ListAdapter();
+        adapter = new AIListAdapter();
         final RecyclerView.ItemAnimator animator = new DefaultItemAnimator();
         RecyclerView.LayoutManager lm = new GridLayoutManager(AIActivity.this, 4, LinearLayoutManager.VERTICAL, false);
 
@@ -83,7 +71,7 @@ public class AIActivity extends BaseNavActivity implements
             @Override
             public void onClick(View v) {
                 showCard();
-                solveGame(v);
+                solveGame();
             }
         });
 
@@ -95,7 +83,27 @@ public class AIActivity extends BaseNavActivity implements
                 clear();
             }
         });
+
+        SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
+        if (!prefs.getBoolean(PREF_VISITED, false)) {
+            startActivityForResult(new Intent(this, WelcomeActivity.class), WELCOME_REQUEST);
+        }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode == RESULT_OK){
+            if(requestCode == WELCOME_REQUEST){
+                SharedPreferences prefs = getSharedPreferences(PREF, MODE_PRIVATE);
+                SharedPreferences.Editor edit = prefs.edit();
+                edit.putBoolean(PREF_VISITED, true);
+                edit.apply();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
 
     private void showCard() {
         if(solutionContainer.getVisibility() == View.VISIBLE){
@@ -103,7 +111,7 @@ public class AIActivity extends BaseNavActivity implements
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             final Animator animator = ViewAnimationUtils.createCircularReveal(solutionContainer,
-                    solutionContainer.getWidth(),
+                    solutionContainer.getWidth() / 2,
                     solutionContainer.getHeight(),
                     0,
                     (float) Math.hypot(solutionContainer.getWidth(), solutionContainer.getHeight()));
@@ -131,7 +139,7 @@ public class AIActivity extends BaseNavActivity implements
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             final Animator animatorHide = ViewAnimationUtils.createCircularReveal(solutionContainer,
-                    0,
+                    solutionContainer.getWidth() / 2,
                     solutionContainer.getHeight(),
                     (float) Math.hypot(solutionContainer.getWidth(), solutionContainer.getHeight()),
                     0);
@@ -155,10 +163,9 @@ public class AIActivity extends BaseNavActivity implements
 
     private void clear() {
         solutionText.setText(null);
-        hideCard();
     }
 
-    private void solveGame(View v) {
+    private void solveGame() {
         solutionText.setText(null);
         adapter.solve(solutionText);
         //Snackbar.make(fabStart, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
@@ -179,8 +186,8 @@ public class AIActivity extends BaseNavActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_help) {
-            startActivity(new Intent(AIActivity.this, AboutActivity.class));
+        if (id == R.id.action_rules) {
+            startActivity(new Intent(AIActivity.this, RulesActivity.class));
             return true;
         }
 
@@ -191,10 +198,9 @@ public class AIActivity extends BaseNavActivity implements
     public void onRefresh() {
         hideCard();
         clear();
-        adapter = new ListAdapter();
+        adapter = new AIListAdapter();
         recyclerview.setAdapter(adapter);
         adapter.notifyDataSetChanged();
-        solutionText.setText("");
         swipeRefreshLayout.setRefreshing(false);
     }
 

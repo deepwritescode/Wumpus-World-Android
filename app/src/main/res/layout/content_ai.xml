@@ -15,13 +15,12 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
-            android:background="#bdbdbd"
             android:padding="16dp"
             android:clipChildren="false"
             android:clipToPadding="false"
             app:spanCount="4"
             app:layoutManager="android.support.v7.widget.GridLayoutManager"
-            tools:listitem="@layout/list_item"
+            tools:listitem="@layout/list_item_game_block"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 

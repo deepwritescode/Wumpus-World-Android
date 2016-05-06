@@ -22,8 +22,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <style name="AppTheme.TransparentStatus" parent="AppTheme.NoActionBar">
-    </style>
+    <style name="AppTheme.TransparentStatus" parent="AppTheme.NoActionBar"></style>
 
     <style name="elevated">
 

@@ -19,7 +19,7 @@ import com.zhilyn.app.wumpusworld.R;
  * Created by Deep on 5/4/16.
  *
  */
-abstract class BaseNavActivity extends AppCompatActivity implements
+public abstract class BaseNavActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "BaseNavActivity";
 
@@ -90,10 +90,14 @@ abstract class BaseNavActivity extends AppCompatActivity implements
         Intent i = null;
         switch(item.getItemId()){
             case R.id.nav_game:
-
+                if(!(this instanceof GameActivity)) {
+                    i = new Intent(this, GameActivity.class);
+                }
                 break;
             case R.id.nav_ai_bot:
-
+                if(!(this instanceof AIActivity)) {
+                    i = new Intent(this, AIActivity.class);
+                }
                 break;
             case R.id.nav_about:
                 i = new Intent(this, AboutActivity.class);

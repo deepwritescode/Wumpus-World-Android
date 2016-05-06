@@ -6,4 +6,7 @@
     <color name="colorAccent">#304ffe</color>
     <color name="colorStop" >#ec282b</color>
 
+    <color name="colorBg" >#bdbdbd</color>
+    <color name="white">#fff</color>
+
 </resources>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:showIn="@layout/activity_rules">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:paddingBottom="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="@string/rule_objective"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
+            android:layout_margin="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:padding="20dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:background="@drawable/bg_card"
+                android:padding="2dp"
+                android:src="@drawable/ic_player"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:gravity="center|start"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/rule_player" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:background="@drawable/bg_card"
+                android:padding="2dp"
+                android:src="@drawable/ic_gold"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:gravity="center|start"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="0dp"
+                android:text="@string/rule_gold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:background="@drawable/bg_card"
+                android:padding="2dp"
+                android:src="@drawable/ic_glitter"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:gravity="center|start"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="0dp"
+                android:text="@string/rule_glitter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:background="@drawable/bg_card"
+                android:padding="2dp"
+                android:src="@drawable/ic_wumpus"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:gravity="center|start"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="0dp"
+                android:text="@string/rule_wumpus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@drawable/ic_stench"
+                android:background="@drawable/bg_card"
+                android:padding="2dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:gravity="center|start"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="0dp"
+                android:text="@string/rule_stench"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:background="@drawable/bg_card"
+                android:padding="2dp"
+                android:src="@drawable/ic_pit"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:gravity="center|start"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="0dp"
+                android:text="@string/rule_pit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:background="@drawable/bg_card"
+                android:padding="2dp"
+                android:src="@drawable/ic_breeze"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:gravity="center|start"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="0dp"
+                android:text="@string/rule_breeze"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>

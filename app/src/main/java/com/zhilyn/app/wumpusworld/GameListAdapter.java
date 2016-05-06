@@ -7,10 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.zhilyn.app.wumpusworld.algorithm.AStar;
-import com.zhilyn.app.wumpusworld.algorithm.DecisionNode;
 import com.zhilyn.app.wumpusworld.world.GameMap;
-import com.zhilyn.app.wumpusworld.world.Util;
 import com.zhilyn.app.wumpusworld.world.pieces.Block;
 import com.zhilyn.app.wumpusworld.world.pieces.GamePiece;
 
@@ -18,16 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Deep on 5/2/16.
- *
+ * Created by Deep on 5/6/16.
  */
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
+public class GameListAdapter extends RecyclerView.Adapter<GameListAdapter.ListItem> {
 
     private GameMap map;
 
-    private final List<Block> mData;
+    private List<Block> mData;
 
-    public ListAdapter(){
+    public GameListAdapter(){
         mData = new ArrayList<>();
         this.map = GameMap.init();
         mData.removeAll(mData);
@@ -37,7 +33,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
     @Override
     public ListItem onCreateViewHolder(ViewGroup parent, int viewType) {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        final View v = inflater.inflate(R.layout.list_item, parent, false);
+        final View v = inflater.inflate(R.layout.list_item_game_block, parent, false);
         return new ListItem(v);
     }
 
@@ -76,50 +72,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ListItem> {
     @Override
     public int getItemCount() {
         return mData.size();
-    }
-
-    public void solve(TextView textView) {
-        textView.append("");
-
-        Block destination = this.map.getDestinationBlock();
-        List<DecisionNode.Move> moves = new ArrayList<>();
-
-        List<DecisionNode> solution = AStar.getSolution(this.map);
-        final int end = solution.size();
-        for (int i = 0; i < end; i++) {
-            if((i + 1) == end){
-                moves.add(DecisionNode.Move.GRAB);
-                continue;
-            }
-            DecisionNode current = solution.get(i);
-            DecisionNode next = solution.get(i + 1);
-            //textView.append(current.getBlock().getPoint().toString() + " ");
-
-            Block currentBlock = current.getBlock();
-            Block nextBlock = next.getBlock();
-
-            if(Util.isAboveBlock(currentBlock, nextBlock)){
-                moves.add(DecisionNode.Move.UP);
-                continue;
-            }
-            if(Util.isLeftBlock(currentBlock, nextBlock)){
-                moves.add(DecisionNode.Move.LEFT);
-                continue;
-            }
-            if(Util.isRightBlock(currentBlock, nextBlock)){
-                moves.add(DecisionNode.Move.RIGHT);
-                continue;
-            }
-            if(Util.isBelowBlock(currentBlock, nextBlock)){
-                moves.add(DecisionNode.Move.DOWN);
-                continue;
-            }
-        }
-
-        textView.append("\n");
-        for (DecisionNode.Move move : moves) {
-            textView.append(move.toString()+ " ");
-        }
     }
 
     public class ListItem extends RecyclerView.ViewHolder{

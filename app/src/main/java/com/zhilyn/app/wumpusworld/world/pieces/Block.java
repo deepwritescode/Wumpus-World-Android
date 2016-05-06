@@ -8,6 +8,7 @@ import java.util.List;
  * represents a block on the game map
  */
 public class Block{
+    public static boolean VISIBLE;
 
     //constant that states weather the block is a safe block or not
     private final boolean IS_SAFE_BLOCK;

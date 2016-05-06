@@ -4,7 +4,6 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:visible="false"
             android:id="@+id/nav_game"
             android:title="@string/nav_title_game" />
 

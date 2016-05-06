@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Wumpus World</string>
 
-    <string name="action_help">Help</string>
+    <string name="action_rules">Rules</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
 
@@ -12,6 +12,8 @@
     <string name="nav_title_feedback">Feedback</string>
 
     <string name="activity_title_about">About</string>
+    <string name="activity_title_rules">Rules</string>
+    <string name="title_activity_game">Game</string>
 
     <string name="about_content">
         "This app was made for a class project, \n \n \n"
@@ -28,4 +30,13 @@
         "What grade do you think I should have gotten on this project? "
         "Let me know, leave me a review, hopefully we can hit 5k users by June "
     </string>
+
+    <string name="rule_player">This is the player</string>
+    <string name="rule_stench">This is a stench block, don\'t worry, it\'s safe to step on this block but be careful. Stepping on this block means that there is a wumpus lurking in one of the perpenducular blocks.</string>
+    <string name="rule_wumpus">This is Wumpus, he\'s smells bad and he really hates that you\'re in his cave exploring the world. If you step on a tile that has Wumpus, he\'ll make like a black hole and devour your entire existance. Don\'t step on Wumpus\'s block.</string>
+    <string name="rule_gold">This is the gold. This game is like wallstreet, the whole purpose is to get the money. But there are going to be dangers along the way.</string>
+    <string name="rule_glitter">This is glitter. This means that there is gold on this block, try to grab the gold if you end up on a block with glitter by pressing \'Grab Gold\'</string>
+    <string name="rule_pit">This is the bottomless pit. Stay away from the pit!!! If you step on the bottomless pit, the player will die and the game will be over. The player will fall forever and never come back.</string>
+    <string name="rule_breeze">This is a breeze. If the player is on this block then that means there is a bottomless pit nearbly. Make your next move carefully, you might fall into a bottomless pit if you\'re not careful.</string>
+    <string name="rule_objective">The purpose of the game is to get the gold!</string>
 </resources>
