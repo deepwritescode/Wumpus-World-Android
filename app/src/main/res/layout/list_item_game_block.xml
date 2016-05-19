@@ -9,6 +9,7 @@
     <FrameLayout
         android:clickable="true"
         android:padding="2dp"
+        android:id="@+id/container"
         android:foreground="?attr/selectableItemBackground"
         android:background="@drawable/bg_card"
         android:layout_width="match_parent"

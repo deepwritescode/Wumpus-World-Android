@@ -15,10 +15,14 @@ public class Block{
 
     List<GamePiece> content;
     private Point point;
+    private boolean isShown = false;
 
     public Block(boolean isSafeBlock){
         this.IS_SAFE_BLOCK = isSafeBlock;
         this.content = new ArrayList<>();
+        if(isSafeBlock){
+            this.isShown = true;
+        }
     }
 
     /**
@@ -27,11 +31,11 @@ public class Block{
      * a pit, gold, or wumpus
      * */
     public boolean addPiece(GamePiece piece){
+        //doesn't allow for a duplicate piece to be added to the block
         if(isAdded(piece.getType())){
             return false;
         }
 
-        GamePiece.Type type = piece.getType();
         boolean isWGP = piece.isWGP();
         if ((isWGP && this.hasWGP()) || (IS_SAFE_BLOCK && piece.isWGP())) {
             return false;
@@ -146,6 +150,14 @@ public class Block{
             }
         }
         return false;
+    }
+
+    public boolean isShown() {
+        return isShown;
+    }
+
+    public void setIsShown(boolean isShown) {
+        this.isShown = isShown;
     }
 
     public static class Point {

@@ -103,8 +103,6 @@ public class AIActivity extends BaseNavActivity implements
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
-
     private void showCard() {
         if(solutionContainer.getVisibility() == View.VISIBLE){
             return;
